@@ -23,6 +23,10 @@ jobs:
           test "${SDK_VERSION%%.*}" -ge 26
       - name: Install build tools
         run: brew install meson ninja pkg-config xcodegen qemu autoconf automake libtool cmake
+      - name: Install GPU code generator dependencies
+        run: |
+          /opt/homebrew/bin/python3 -m pip install --target "$GITHUB_WORKSPACE/build/python-deps" PyYAML Mako
+          echo "PYTHONPATH=$GITHUB_WORKSPACE/build/python-deps" >> "$GITHUB_ENV"
       - name: Install Rust iOS toolchain
         uses: dtolnay/rust-toolchain@stable
         with:
