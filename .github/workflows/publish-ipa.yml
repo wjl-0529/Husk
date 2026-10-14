@@ -1,0 +1,22 @@
+name: Publish Chinese IPA
+on:
+  push:
+    paths: ['.github/workflows/publish-ipa.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: Husk-zh-Hans
+          run-id: 38513189586
+          github-token: ${{ github.token }}
+      - name: Publish direct IPA download
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create zh-hans-20261014 Husk-zh-Hans.ipa Husk-zh-Hans.tipa --repo "$GITHUB_REPOSITORY" --target 85355324a7c568bbddc9dbdbb4ec713903a5ee16 --title "Husk 简体中文版" --notes "简体中文 IPA 与 TrollStore TIPA。"
