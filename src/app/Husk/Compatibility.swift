@@ -222,7 +222,7 @@ struct CompatibilitySection: View {
                 HStack(spacing: 12) {
                     Image(systemName: status.symbol).font(.title3).foregroundStyle(status.color)
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(status.label).font(.body.weight(.semibold))
+                        Text(LocalizedStringKey(status.label)).font(.body.weight(.semibold))
                         Text(entry.official?.note.isEmpty == false ? entry.official!.note : status.explanation)
                             .font(.footnote).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
                     }
@@ -287,7 +287,7 @@ struct CompatReportSheet: View {
                     Text("Sent with it: \(CompatibilityStore.device), iOS \(UIDevice.current.systemVersion), Husk build \(CompatibilityStore.build), JIT from \(CompatibilityStore.jitMethod). It shows on antiweb.lol for everyone.")
                 }
                 if let error {
-                    Section { Text(error).foregroundStyle(.red) }
+                    Section { Text(LocalizedStringKey(error)).foregroundStyle(.red) }
                 }
             }
             .navigationTitle(sent ? "Thanks!" : "Report")

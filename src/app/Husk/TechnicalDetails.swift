@@ -58,7 +58,7 @@ struct TLTechnicalView: View {
                 row("Package", app.packageName ?? "—", mono: true)
                 row("Architectures", report.map { $0.abis.isEmpty ? "None (Java only)" : $0.abis.joined(separator: ", ") } ?? "—")
                 if let summary = report?.displaySummary {
-                    Text(summary).font(.footnote).foregroundStyle(.secondary)
+                    Text(LocalizedStringKey(summary)).font(.footnote).foregroundStyle(.secondary)
                 }
             }
 
@@ -144,7 +144,7 @@ struct TLTechnicalView: View {
                 .multilineTextAlignment(.trailing)
                 .textSelection(.enabled)
         } label: {
-            Text(label).lineLimit(2)
+            Text(LocalizedStringKey(label)).lineLimit(2)
         }
     }
 

@@ -12,9 +12,9 @@ struct TLAppSettings: Codable, Equatable {
         var id: String { rawValue }
         var title: String {
             switch self {
-            case .auto: return "Automatic"
-            case .landscape: return "Landscape"
-            case .portrait: return "Portrait"
+            case .auto: return String(localized: "Automatic")
+            case .landscape: return String(localized: "Landscape")
+            case .portrait: return String(localized: "Portrait")
             }
         }
     }
@@ -25,10 +25,10 @@ struct TLAppSettings: Codable, Equatable {
         var id: String { rawValue }
         var title: String {
             switch self {
-            case .low: return "Low"
-            case .medium: return "Medium"
-            case .high: return "High"
-            case .native: return "Native"
+            case .low: return String(localized: "Low")
+            case .medium: return String(localized: "Medium")
+            case .high: return String(localized: "High")
+            case .native: return String(localized: "Native")
             }
         }
         var detail: String {
@@ -36,7 +36,7 @@ struct TLAppSettings: Codable, Equatable {
             case .low: return "1 pixel per point. Fastest."
             case .medium: return "1.5 pixels per point."
             case .high: return "2 pixels per point. The default."
-            case .native: return "Every pixel the screen has. Sharpest, and heaviest."
+            case .native: return String(localized: "Every pixel the screen has. Sharpest, and heaviest.")
             }
         }
         @MainActor var scale: CGFloat {
@@ -56,9 +56,9 @@ struct TLAppSettings: Codable, Equatable {
         var id: String { rawValue }
         var title: String {
             switch self {
-            case .auto: return "Automatic"
-            case .always: return "Always"
-            case .never: return "Never"
+            case .auto: return String(localized: "Automatic")
+            case .always: return String(localized: "Always")
+            case .never: return String(localized: "Never")
             }
         }
     }
@@ -70,9 +70,9 @@ struct TLAppSettings: Codable, Equatable {
         var id: String { rawValue }
         var title: String {
             switch self {
-            case .auto: return "Default"
-            case .window: return "Window"
-            case .fullScreen: return "Full Screen"
+            case .auto: return String(localized: "Default")
+            case .window: return String(localized: "Window")
+            case .fullScreen: return String(localized: "Full Screen")
             }
         }
     }
@@ -300,12 +300,12 @@ struct TLAppSettingsView: View {
         case .idle:
             Button("Download Geode") { Task { await geode.prepare(app) } }
         case .working(let what):
-            HStack(spacing: 10) { ProgressView(); Text(what).foregroundStyle(.secondary) }
+            HStack(spacing: 10) { ProgressView(); Text(LocalizedStringKey(what)).foregroundStyle(.secondary) }
         case .ready(let version):
             LabeledContent("Geode", value: "v\(version), ready")
         case .failed(let why):
             VStack(alignment: .leading, spacing: 6) {
-                Text(why).font(.footnote).foregroundStyle(.orange)
+                Text(LocalizedStringKey(why)).font(.footnote).foregroundStyle(.orange)
                 Button("Try Again") { Task { await geode.prepare(app) } }
             }
         }

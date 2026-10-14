@@ -554,11 +554,11 @@ struct TLChecksView: View {
             ForEach(store.checks) { check in
                 VStack(alignment: .leading, spacing: 6) {
                     HStack {
-                        Text(check.title).foregroundStyle(Theme.text)
+                        Text(LocalizedStringKey(check.title)).foregroundStyle(Theme.text)
                         Spacer(minLength: 8)
                         TLCheckTag(status: check.status)
                     }
-                    Text(check.detail)
+                    Text(LocalizedStringKey(check.detail))
                         .font(.system(size: 12))
                         .foregroundStyle(Theme.textDim)
                         .fixedSize(horizontal: false, vertical: true)

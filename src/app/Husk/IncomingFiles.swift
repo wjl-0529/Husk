@@ -131,7 +131,7 @@ struct IncomingChooser: View {
         VStack(alignment: .leading, spacing: 18) {
             VStack(alignment: .leading, spacing: 4) {
                 Text("Add to Husk").font(.title2.weight(.bold))
-                Text(title).font(.subheadline).foregroundStyle(.secondary).lineLimit(2)
+                Text(LocalizedStringKey(title)).font(.subheadline).foregroundStyle(.secondary).lineLimit(2)
             }
 
             choice(icon: "bolt.fill", title: "Translation Layer",
@@ -165,8 +165,8 @@ struct IncomingChooser: View {
                     .frame(width: 44, height: 44)
                     .background(Color.accentColor.opacity(0.14), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(title).font(.headline).foregroundStyle(.primary)
-                    Text(detail).font(.subheadline).foregroundStyle(.secondary)
+                    Text(LocalizedStringKey(title)).font(.headline).foregroundStyle(.primary)
+                    Text(LocalizedStringKey(detail)).font(.subheadline).foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 Spacer(minLength: 0)

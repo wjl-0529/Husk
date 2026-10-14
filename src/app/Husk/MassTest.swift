@@ -311,7 +311,7 @@ struct MassTestView: View {
                 if let s = test.state {
                     Text(test.active ? "In progress: \(s.results.count) of \(s.queue.count) done." : "Last test: \(s.results.count) of \(s.queue.count) done.")
                 }
-                if !test.status.isEmpty { Text(test.status).font(.caption).foregroundStyle(.secondary) }
+                if !test.status.isEmpty { Text(LocalizedStringKey(test.status)).font(.caption).foregroundStyle(.secondary) }
             } footer: {
                 Text("Each app is played once JIT is on, watched for 15 seconds, and written down; then Husk closes. Open Husk again for the next one. At the end the results file is offered to share.")
             }

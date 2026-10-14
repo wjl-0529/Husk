@@ -457,7 +457,7 @@ struct PlayAppDetailSheet: View {
             Text(value)
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(Theme.text)
-            Text(title)
+            Text(LocalizedStringKey(title))
                 .font(.caption2)
                 .foregroundStyle(Theme.textDim)
         }

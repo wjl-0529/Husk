@@ -22,7 +22,7 @@ struct FAQTab: View {
                     Section {
                         ForEach(s.items) { item in FAQRow(item: item, expanded: !query.isEmpty) }
                     } header: {
-                        Label(s.title, systemImage: s.symbol)
+                        Label(LocalizedStringKey(s.title), systemImage: s.symbol)
                     }
                 }
                 if sections.isEmpty {
@@ -49,13 +49,21 @@ private struct FAQRow: View {
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(.vertical, 4)
         } label: {
-            Text(item.question).font(.body.weight(.medium))
+            Text(LocalizedStringKey(item.question)).font(.body.weight(.medium))
         }
     }
 }
 
 enum FAQ {
-    struct Item: Identifiable { let question: String; let answer: String; var id: String { question } }
+    struct Item: Identifiable {
+        let question: String
+        let answer: String
+        var id: String { question }
+        init(question: String, answer: String) {
+            self.question = NSLocalizedString(question, comment: "FAQ question")
+            self.answer = NSLocalizedString(answer, comment: "FAQ answer")
+        }
+    }
     struct Section: Identifiable { let title: String; let symbol: String; let items: [Item]; var id: String { title } }
 
     static let sections: [Section] = [

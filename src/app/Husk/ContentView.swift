@@ -200,7 +200,7 @@ struct ContentView: View {
             Button("Download") { guest.applyUpdate() }
             Button("Not now", role: .cancel) { guest.dismissUpdate() }
         } message: {
-            Text(guest.update.detail)
+            Text(LocalizedStringKey(guest.update.detail))
         }
         .sheet(isPresented: $massTest.shareResults) { ShareSheet(items: [MassTest.resultsURL]) }
         .onAppear {
@@ -642,7 +642,7 @@ struct ControlsSheet: View {
                 .frame(width: 34, height: 34)
                 .background(Theme.surfaceHigh,
                             in: RoundedRectangle(cornerRadius: 10, style: .continuous))
-            Text(title)
+            Text(LocalizedStringKey(title))
                 .font(.system(size: 15, weight: .medium))
                 .foregroundStyle(available ? Theme.text : Theme.textDim.opacity(0.6))
             Spacer()

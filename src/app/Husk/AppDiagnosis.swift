@@ -211,8 +211,8 @@ struct AppDiagnosisCard: View {
                 .foregroundStyle(diagnosis.blocksLaunch ? .red : .orange)
                 .frame(width: 26)
             VStack(alignment: .leading, spacing: 4) {
-                Text(diagnosis.title).font(.subheadline.weight(.semibold))
-                Text(diagnosis.detail).font(.footnote).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+                Text(LocalizedStringKey(diagnosis.title)).font(.subheadline.weight(.semibold))
+                Text(LocalizedStringKey(diagnosis.detail)).font(.footnote).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
                 if showsEvidence, let e = diagnosis.evidence {
                     Text(e).font(.system(size: 10.5, design: .monospaced)).foregroundStyle(.secondary)
                         .lineLimit(4).textSelection(.enabled).padding(.top, 2)

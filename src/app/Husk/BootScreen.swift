@@ -128,7 +128,7 @@ struct BootScreen: View {
                     .foregroundStyle(Theme.accent)
                 Spacer()
                 if let left = remaining {
-                    Text(left)
+                    Text(LocalizedStringKey(left))
                         .font(.system(size: 12))
                         .foregroundStyle(Theme.textDim)
                 }

@@ -76,7 +76,7 @@ struct OnboardingView: View {
                             onDone()
                         }
                     } label: {
-                        Text(page < pages - 1 ? "Continue" : "Start using Husk")
+                        Text(LocalizedStringKey(page < pages - 1 ? "Continue" : "Start using Husk"))
                     }
                     .buttonStyle(PrimaryButtonStyle())
                     .padding(.horizontal, 28)
@@ -162,8 +162,8 @@ struct OnboardingView: View {
                 .background(Theme.accentSoft, in: RoundedRectangle(cornerRadius: 9,
                                                                    style: .continuous))
             VStack(alignment: .leading, spacing: 3) {
-                Text(title).font(.body.weight(.medium))
-                Text(detail).font(.caption).foregroundStyle(.secondary)
+                Text(LocalizedStringKey(title)).font(.body.weight(.medium))
+                Text(LocalizedStringKey(detail)).font(.caption).foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
             }
             Spacer(minLength: 8)

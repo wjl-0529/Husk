@@ -111,8 +111,8 @@ struct SettingsTab: View {
         NavigationLink { destination } label: {
             Label {
                 VStack(alignment: .leading, spacing: 1) {
-                    Text(title)
-                    Text(subtitle).font(.caption).foregroundStyle(.secondary).lineLimit(1)
+                    Text(LocalizedStringKey(title))
+                    Text(LocalizedStringKey(subtitle)).font(.caption).foregroundStyle(.secondary).lineLimit(1)
                 }
             } icon: {
                 RoundedRectangle(cornerRadius: 7, style: .continuous)
@@ -530,7 +530,7 @@ struct JITSettings: View {
                           value: JITBootstrap.detached ? "detached" : "attached",
                           mono: false)
                 if let why = JITBootstrap.lastFailure {
-                    Text(why).font(.caption).foregroundStyle(.orange)
+                    Text(LocalizedStringKey(why)).font(.caption).foregroundStyle(.orange)
                 }
                 if !JITBootstrap.ready {
                     Button {
@@ -640,7 +640,7 @@ struct SavedMachineSettings: View {
                 }
                 .disabled(!QemuRunner.shared.hasSnapshot)
                 if let deleteResult {
-                    Text(deleteResult).font(.caption).foregroundStyle(.secondary)
+                    Text(LocalizedStringKey(deleteResult)).font(.caption).foregroundStyle(.secondary)
                 }
             } footer: {
                 Text(QemuRunner.shared.hasSnapshot
@@ -758,7 +758,7 @@ struct AppearanceSettings: View {
                                         .overlay(RoundedRectangle(cornerRadius: 14, style: .continuous)
                                             .strokeBorder(appIcon == icon ? Color.accentColor : .clear, lineWidth: 3))
                                 }
-                                Text(icon.title)
+                                Text(LocalizedStringKey(icon.title))
                                     .font(.caption)
                                     .foregroundStyle(appIcon == icon ? Color.accentColor : .primary)
                                     .lineLimit(1)

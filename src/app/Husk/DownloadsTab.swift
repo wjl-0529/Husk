@@ -120,7 +120,7 @@ private struct DownloadRow: View {
                 }
             }
             if !job.complete { ProgressView(value: fraction) }
-            Text(status).font(.caption).foregroundStyle(job.failed ? Color.orange : Color.secondary).lineLimit(2)
+            Text(LocalizedStringKey(status)).font(.caption).foregroundStyle(job.failed ? Color.orange : Color.secondary).lineLimit(2)
         }
         .padding(.vertical, 4)
     }
@@ -141,7 +141,7 @@ private struct AddDownloadSheet: View {
                         .textInputAutocapitalization(.never)
                         .autocorrectionDisabled()
                 } footer: {
-                    if let problem = downloads.problem { Text(problem).foregroundStyle(.orange) }
+                    if let problem = downloads.problem { Text(LocalizedStringKey(problem)).foregroundStyle(.orange) }
                 }
                 Section {
                     Text("An APK is added to your library when it finishes. Anything else goes into the Shared Storage folder, which games see as their phone storage.")

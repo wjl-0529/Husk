@@ -70,7 +70,7 @@ struct JITCard: View {
                 }
             }
             if let error = jit.error {
-                Text(error).font(.caption).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true)
+                Text(LocalizedStringKey(error)).font(.caption).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true)
             }
         }
         .padding(12)
@@ -130,12 +130,12 @@ struct JITCard: View {
                 Spacer(minLength: 0)
             }
 
-            Text(explanation)
+            Text(LocalizedStringKey(explanation))
                 .font(.subheadline)
                 .fixedSize(horizontal: false, vertical: true)
 
             if let why = HuskBuiltInJIT.unavailableReason {
-                Text(why).font(.footnote).foregroundStyle(.orange)
+                Text(LocalizedStringKey(why)).font(.footnote).foregroundStyle(.orange)
             }
 
             if jit.busy {
@@ -161,7 +161,7 @@ struct JITCard: View {
             }
 
             if let error = jit.error {
-                Text(error).font(.footnote).foregroundStyle(.orange)
+                Text(LocalizedStringKey(error)).font(.footnote).foregroundStyle(.orange)
             }
 
             Button { jit.showSetup = true } label: {

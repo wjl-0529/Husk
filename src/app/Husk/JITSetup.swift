@@ -15,11 +15,11 @@ enum JITMethod: String, CaseIterable, Identifiable {
     var id: String { rawValue }
     var title: String {
         switch self {
-        case .automatic: return "Automatic"
+        case .automatic: return String(localized: "Automatic")
         case .stikDebug: return "StikDebug"
         case .trollStore: return "TrollStore"
-        case .jailbreak: return "Jailbreak (Dopamine)"
-        case .builtIn: return "Built-in StikJIT"
+        case .jailbreak: return String(localized: "Jailbreak (Dopamine)")
+        case .builtIn: return String(localized: "Built-in StikJIT")
         }
     }
 }

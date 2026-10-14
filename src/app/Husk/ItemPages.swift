@@ -19,11 +19,11 @@ private struct PageHero<Action: View>: View {
                     ItemIcon(item: item, size: 84)
                         .shadow(color: .black.opacity(0.35), radius: 12, y: 5)
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(item.title)
+                        Text(LocalizedStringKey(item.title))
                             .font(.system(.title2, design: .rounded).weight(.heavy))
                             .lineLimit(2)
                             .minimumScaleFactor(0.8)
-                        Text(subtitle)
+                        Text(LocalizedStringKey(subtitle))
                             .font(.subheadline)
                             .foregroundStyle(.white.opacity(0.75))
                             .lineLimit(2)
@@ -51,7 +51,7 @@ private struct BigButton: View {
 
     var body: some View {
         Button(action: action) {
-            Label(title, systemImage: systemImage)
+            Label(LocalizedStringKey(title), systemImage: systemImage)
                 .font(.system(.headline, design: .rounded))
                 .frame(maxWidth: .infinity)
                 .frame(height: 50)
@@ -185,7 +185,7 @@ struct GamePage: View {
                 } header: {
                     Text("Saves")
                 } footer: {
-                    if let savesMessage { Text(savesMessage) }
+                    if let savesMessage { Text(LocalizedStringKey(savesMessage)) }
                     else if loadedNow { Text("\(app.label) has been started in this run of Husk. Close Husk and open it again to restore saves.") }
                     else { Text("A backup is a .zip of everything \(app.label) has saved in Husk, to keep in Files or move to another device.") }
                 }
@@ -498,7 +498,7 @@ struct AndroidSystemPage: View {
                     }
                 }
             } footer: {
-                if let note { Text(note) }
+                if let note { Text(LocalizedStringKey(note)) }
             }
             .heroRow()
 

@@ -177,7 +177,7 @@ struct HomeView: View {
                         AndroidTile()
                     }
                     if let error = jit.error, !Launcher.jitOn {
-                        Text(error).font(.caption).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true)
+                        Text(LocalizedStringKey(error)).font(.caption).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true)
                             .padding(.horizontal, 4)
                     }
 
@@ -255,7 +255,7 @@ private struct LeadTile: View {
                     HStack(spacing: 12) {
                         ItemIcon(item: item, size: 40)
                         VStack(alignment: .leading, spacing: 2) {
-                            Text(item.title)
+                            Text(LocalizedStringKey(item.title))
                                 .font(.headline)
                                 .foregroundStyle(.primary)
                                 .lineLimit(1)
@@ -359,7 +359,7 @@ private struct DownloadsTile: View {
                     TileGlyph(systemImage: "arrow.down", color: .indigo)
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Downloads").font(.headline).foregroundStyle(.primary)
-                        Text(status).font(.footnote).foregroundStyle(.secondary).lineLimit(1)
+                        Text(LocalizedStringKey(status)).font(.footnote).foregroundStyle(.secondary).lineLimit(1)
                     }
                 }
             }
@@ -456,7 +456,7 @@ private struct ShelfHeader: View {
 
     var body: some View {
         HStack(alignment: .firstTextBaseline) {
-            Text(title).font(.system(.title3, design: .rounded).weight(.bold))
+            Text(LocalizedStringKey(title)).font(.system(.title3, design: .rounded).weight(.bold))
             Spacer()
             Button("See All", action: seeAll).font(.subheadline.weight(.semibold))
         }
@@ -617,11 +617,11 @@ struct LibraryScreen: View {
             Tile {
                 VStack(alignment: .leading, spacing: 16) {
                     HStack(alignment: .firstTextBaseline, spacing: 6) {
-                        Text(title).font(.headline)
+                        Text(LocalizedStringKey(title)).font(.headline)
                         Text("\(items.count)").font(.subheadline).foregroundStyle(.secondary)
                     }
                     if items.isEmpty, let empty {
-                        Text(empty).font(.subheadline).foregroundStyle(.secondary)
+                        Text(LocalizedStringKey(empty)).font(.subheadline).foregroundStyle(.secondary)
                     } else {
                         LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 10, alignment: .top),
                                                  count: UIDevice.current.userInterfaceIdiom == .pad ? 8 : 4),
@@ -682,13 +682,13 @@ struct LauncherTile: View {
                 if let result { GameStatusBadge(result: result).offset(x: 5, y: -5) }
             }
             VStack(spacing: 1) {
-                Text(title)
+                Text(LocalizedStringKey(title))
                     .font(.caption.weight(.medium))
                     .foregroundStyle(.primary)
                     .lineLimit(2)
                     .multilineTextAlignment(.center)
                 if let caption {
-                    Text(caption).font(.caption2).foregroundStyle(.secondary).lineLimit(1)
+                    Text(LocalizedStringKey(caption)).font(.caption2).foregroundStyle(.secondary).lineLimit(1)
                 }
             }
             .padding(.top, item?.runsInAndroid == true ? 3 : 0)
@@ -723,7 +723,7 @@ struct BusyStrip: View {
     var body: some View {
         HStack(spacing: 12) {
             ProgressView()
-            Text(text).font(.subheadline).lineLimit(2)
+            Text(LocalizedStringKey(text)).font(.subheadline).lineLimit(2)
             Spacer(minLength: 0)
         }
         .padding(14)
