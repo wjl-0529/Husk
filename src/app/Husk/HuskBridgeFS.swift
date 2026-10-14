@@ -157,7 +157,7 @@ final class HuskBridgeFS: ObservableObject {
                                + "(\((try? FileManager.default.attributesOfItem(atPath: dest.path)[.size] as? NSNumber)??.intValue ?? 0) bytes)")
         } catch {
             HuskLog.log("bridge", "FAILED to queue \(name): \(error.localizedDescription)")
-            lastAgentMessage = "Could not add \(name): \(error.localizedDescription)"
+            lastAgentMessage = "无法添加 \(name)：\(error.localizedDescription)"
         }
     }
 
@@ -777,7 +777,7 @@ final class AndroidHost: ObservableObject {
         var label: String
         /// Local file the icon was written to, once it has been fetched.
         var iconPath: String?
-        /// "Game", "App" or "Tool" — set only when Android says so, which for
+        /// "Game", "App" or "工具" — set only when Android says so, which for
         /// a sideloaded APK is often never. Nothing invents one: a wrong
         /// category on every tile is worse than no category at all.
         var category: String?
@@ -948,7 +948,7 @@ final class AndroidHost: ObservableObject {
                     GuestBridge.shared.disconnect()
                     await MainActor.run {
                         self?.status = attempt < 4 ? "Starting Android…"
-                                                   : "Waiting for Android (\(attempt * 3)s)…"
+                                                   : "正在等待 Android（\(attempt * 3) 秒）…"
                     }
                 }
                 try? await Task.sleep(nanoseconds: 3_000_000_000)
@@ -1232,7 +1232,7 @@ final class AndroidHost: ObservableObject {
         switch Int(raw) {
         case 0:               return "Game"
         case 1, 2, 3, 4, 5, 6: return "App"
-        case 7, 8:            return "Tool"
+        case 7, 8:            return "工具"
         default:              return nil
         }
     }
@@ -1462,7 +1462,7 @@ final class AndroidHost: ObservableObject {
     /// route in at all. Same transfer as an install, minus pm.
     func sendFiles(_ files: [URL], to directory: String = "/sdcard/Download") {
         guard !files.isEmpty else { return }
-        busy = "Sending \(files.count == 1 ? files[0].lastPathComponent : "\(files.count) files")…"
+        busy = "正在发送 \(files.count == 1 ? files[0].lastPathComponent : "\(files.count) 个文件")…"
         Task.detached { [weak self] in
             var sent = 0
             for file in files {
@@ -1489,7 +1489,7 @@ final class AndroidHost: ObservableObject {
                         "mkdir -p \(Self.quote(directory))")
                     try GuestBridge.shared.push(file, to: "'\(remote)'") { p in
                         Task { @MainActor in
-                            self?.busy = "Sending \(name) — \(Int(p * 100))%"
+                            self?.busy = "正在发送 \(name) — \(Int(p * 100))%"
                         }
                     }
                     // Without this the file exists and no app can see it: the
@@ -1501,7 +1501,7 @@ final class AndroidHost: ObservableObject {
                     sent += 1
                 } catch {
                     await MainActor.run {
-                        self?.busy = "Could not send \(name): \(error.localizedDescription)"
+                        self?.busy = "无法发送 \(name)：\(error.localizedDescription)"
                     }
                     try? await Task.sleep(nanoseconds: 4_000_000_000)
                     await MainActor.run { self?.busy = nil }
@@ -1512,8 +1512,8 @@ final class AndroidHost: ObservableObject {
             let where_ = (directory as NSString).lastPathComponent
             await MainActor.run {
                 self?.busy = nil
-                self?.say(n == 1 ? "File sent" : "\(n) files sent",
-                          "In Android's \(where_) folder.")
+                self?.say(n == 1 ? "File sent" : "已发送 \(n) 个文件",
+                          "位于 Android 的 \(where_) 文件夹中。")
             }
         }
     }
@@ -1529,7 +1529,7 @@ final class AndroidHost: ObservableObject {
     /// it from there. This is the path for an APK that arrived through the
     /// Files tab, or that a browser in the guest downloaded itself.
     func installFromGuest(_ path: String, name: String) {
-        busy = "Installing \(name)…"
+        busy = "正在安装 \(name)…"
         Task.detached { [weak self] in
             let out = (try? GuestBridge.shared.shell(
                 "pm install -r \(AndroidHost.quote(path))", timeout: 900)) ?? ""
@@ -1539,8 +1539,8 @@ final class AndroidHost: ObservableObject {
             await self?.refreshPackages()
             await MainActor.run {
                 self?.busy = nil
-                self?.say(ok ? "APK installed" : "Install failed",
-                          ok ? "\(name) is ready to launch."
+                self?.say(ok ? "APK 已安装" : "Install failed",
+                          ok ? "\(name) 已准备好启动。"
                              : String(out.prefix(120))
                                  .trimmingCharacters(in: .whitespacesAndNewlines),
                           good: ok)
@@ -1549,7 +1549,7 @@ final class AndroidHost: ObservableObject {
     }
 
     func uninstall(_ package: String) {
-        busy = "Removing \(package)…"
+        busy = "正在移除 \(package)…"
         Task.detached { [weak self] in
             var out = (try? GuestBridge.shared.shell("pm uninstall \(package)",
                                                      timeout: 300)) ?? ""
@@ -1572,8 +1572,8 @@ final class AndroidHost: ObservableObject {
             await self?.refreshPackages()
             await MainActor.run {
                 self?.busy = nil
-                self?.say(ok ? "Uninstalled" : "Could not uninstall",
-                          ok ? "\(label) is gone from Android." : label,
+                self?.say(ok ? "已卸载" : "Could not uninstall",
+                          ok ? "\(label) 已从 Android 移除。" : label,
                           good: ok)
             }
         }
@@ -1595,7 +1595,7 @@ final class AndroidHost: ObservableObject {
         guard let first = apks.first else { return }
         let name = apks.count == 1 ? first.lastPathComponent
                                    : "\(apks.count) APKs (\(first.lastPathComponent))"
-        busy = "Installing \(name)…"
+        busy = "正在安装 \(name)…"
         Task.detached { [weak self] in
             // /data/local/tmp is the one directory the shell user owns outright,
             // and the one pm will read an APK from.
@@ -1620,15 +1620,15 @@ final class AndroidHost: ObservableObject {
                     _ = try? GuestBridge.shared.shell("input keyevent KEYCODE_WAKEUP")
                     Thread.sleep(forTimeInterval: 1.5)
                     if case .locked = AndroidHost.guestState() {
-                        throw BridgeError.io("Android is locked. Open the Android "
-                                           + "screen, unlock it, and try again.")
+                        throw BridgeError.io("Android 已锁定。请打开 Android"
+                                           + "屏幕，解锁后重试。")
                     }
                 case .locked:
-                    throw BridgeError.io("Android is locked. Open the Android "
-                                       + "screen, unlock it, and try again.")
+                    throw BridgeError.io("Android 已锁定。请打开 Android"
+                                       + "屏幕，解锁后重试。")
                 case .unreachable(let why):
-                    throw BridgeError.io("\(why). Open the Android screen and "
-                                       + "check it is running, then try again.")
+                    throw BridgeError.io("\(why)。请打开 Android 屏幕，"
+                                       + "确认正在运行后重试。")
                 case .ready:
                     break
                 }
@@ -1641,7 +1641,7 @@ final class AndroidHost: ObservableObject {
                         : "\(url.lastPathComponent) (\(i + 1)/\(apks.count))"
                     try GuestBridge.shared.push(url, to: remotes[i]) { p in
                         Task { @MainActor in
-                            self?.busy = "Copying \(label) — \(Int(p * 100))%"
+                            self?.busy = "正在复制 \(label) — \(Int(p * 100))%"
                         }
                     }
                     // Confirm the whole file landed before asking pm to parse it.
@@ -1658,7 +1658,7 @@ final class AndroidHost: ObservableObject {
                     expected += size
                 }
 
-                await MainActor.run { self?.busy = "Installing \(name)…" }
+                await MainActor.run { self?.busy = "正在安装 \(name)…" }
                 // Installing is dex2oat's work and it is emulated, so minutes
                 // rather than seconds for anything large. -t allows test-signed
                 // APKs, which most sideloaded builds are.
@@ -1704,7 +1704,7 @@ final class AndroidHost: ObservableObject {
                             HuskLog.log("bridge", "\(name) installed; not saving, "
                                       + "automatic saves are off")
                             self?.busy = nil
-                            self?.say("APK installed",
+                            self?.say("APK 已安装",
                                       "Save Android to keep it past this session.")
                             return
                         }
@@ -1719,10 +1719,10 @@ final class AndroidHost: ObservableObject {
                         QemuRunner.shared.saveState(reason: "installed \(name)") { saved in
                             self?.busy = nil
                             if saved {
-                                self?.say("APK installed", "Ready to launch.")
+                                self?.say("APK 已安装", "Ready to launch.")
                             } else {
                                 HuskLog.log("bridge", "\(name) is installed but the machine "
-                                          + "was not saved; it will be gone next launch")
+                                          + "尚未保存，下次启动时会丢失")
                                 self?.say("Installed, but not saved",
                                           "It will be gone on the next launch.",
                                           good: false)
@@ -1740,7 +1740,7 @@ final class AndroidHost: ObservableObject {
                 }
             } catch {
                 HuskLog.log("bridge", "install failed: \(error.localizedDescription)")
-                await MainActor.run { self?.busy = "Install failed: \(error.localizedDescription)" }
+                await MainActor.run { self?.busy = "安装失败：\(error.localizedDescription)" }
                 Task { try? await Task.sleep(nanoseconds: 5_000_000_000)
                        await MainActor.run { self?.busy = nil } }
             }
@@ -1877,7 +1877,7 @@ final class AndroidHost: ObservableObject {
                                                   timeout: 60)
                 HuskLog.log("perf", "render size \(w)x\(h) density \(d) "
                           + "(\(Int(scale * 100))% of \(base.xres)x\(base.yres)); "
-                          + "\(Int((1 - scale * scale) * 100))% fewer pixels to rasterise")
+                          + "需要绘制的像素减少 \(Int((1 - scale * scale) * 100))%")
             }
 
             // Animations are pure compositor work and buy nothing at 12 fps.

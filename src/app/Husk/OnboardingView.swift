@@ -76,7 +76,7 @@ struct OnboardingView: View {
                             onDone()
                         }
                     } label: {
-                        Text(LocalizedStringKey(page < pages - 1 ? "Continue" : "Start using Husk"))
+                        Text(LocalizedStringKey(page < pages - 1 ? "继续" : "开始使用 Husk"))
                     }
                     .buttonStyle(PrimaryButtonStyle())
                     .padding(.horizontal, 28)
@@ -110,10 +110,10 @@ struct OnboardingView: View {
                     .shadow(color: Theme.accent.opacity(0.35), radius: 22, y: 10)
             }
             Text("Husk").font(.system(size: 40, weight: .semibold, design: .rounded))
-            Text("Android apps, on your iPhone.")
+            Text("在 iPhone 上运行 Android 应用。")
                 .font(.title3).foregroundStyle(.secondary)
-            Text("Husk runs a real Android system and opens APKs inside it. "
-               + "A few questions first — all of them can be changed later in Settings.")
+            Text("Husk 在真实 Android 系统中打开 APK。"
+               + "请先回答几个问题，之后均可在设置中修改。")
                 .font(.callout).foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 34).padding(.top, 4)
@@ -124,28 +124,28 @@ struct OnboardingView: View {
     private var choices: some View {
         ScrollView {
             VStack(spacing: 14) {
-                Text("How should Husk behave?")
+                Text("Husk 应如何运行？")
                     .font(.title2.weight(.semibold))
                     .padding(.top, 34).padding(.bottom, 6)
 
-                choice(icon: "bolt.fill", title: "Start Android on launch",
-                       detail: "Boots the guest as soon as Husk opens, once JIT is "
-                             + "available. Off means you start it yourself.",
+                choice(icon: "bolt.fill", title: "启动时运行 Android",
+                       detail: "JIT 可用时，打开 Husk 即启动 Android。"
+                             + "关闭后需要手动启动。",
                        isOn: $autoStart)
 
-                choice(icon: "rectangle.landscape.rotate", title: "Landscape screen",
-                       detail: "Gives Android a landscape screen, which games fill "
-                             + "properly. Portrait apps get letterboxed instead.",
+                choice(icon: "rectangle.landscape.rotate", title: "横屏",
+                       detail: "为 Android 使用横屏，使游戏正确填满画面。"
+                             + "竖屏应用会留有黑边。",
                        isOn: $landscape)
 
-                choice(icon: "speaker.wave.2.fill", title: "Sound",
-                       detail: "Adds a sound device. Android cannot be saved while "
-                             + "this is on, so every launch boots from cold.",
+                choice(icon: "speaker.wave.2.fill", title: "声音",
+                       detail: "添加声音设备。启用时无法保存 Android，"
+                             + "因此每次启动均需从头开机。",
                        isOn: $sound)
 
-                choice(icon: "externaldrive.badge.checkmark", title: "Save automatically",
-                       detail: "Saves the machine once Android settles, so later "
-                             + "launches restore in seconds instead of booting.",
+                choice(icon: "externaldrive.badge.checkmark", title: "自动保存",
+                       detail: "Android 启动完成后保存机器状态，以后"
+                             + "可在数秒内恢复，无需重新开机。",
                        isOn: $autoSave)
             }
             .padding(.horizontal, 20).padding(.bottom, 20)
@@ -175,12 +175,12 @@ struct OnboardingView: View {
 
     /// What the JIT page says is already in place, if anything.
     private var jitState: String? {
-        if JITBootstrap.ready { return "JIT is on." }
-        if jit.method == .stikDebug { return "Husk will use StikDebug." }
-        if jit.method == .trollStore { return "Husk will use TrollStore." }
+        if JITBootstrap.ready { return "JIT 已开启。" }
+        if jit.method == .stikDebug { return "Husk 将使用 StikDebug。" }
+        if jit.method == .trollStore { return "Husk 将使用 TrollStore。" }
         switch jit.pairingSource {
-        case .onDevice: return "Paired on this device."
-        case .imported: return "Pairing file imported."
+        case .onDevice: return "已在此设备上配对。"
+        case .imported: return "配对文件已导入。"
         case nil: return nil
         }
     }
@@ -191,10 +191,10 @@ struct OnboardingView: View {
             Image(systemName: "bolt.fill")
                 .font(.system(size: 54))
                 .foregroundStyle(Theme.accent)
-            Text("Turn on JIT").font(.largeTitle.weight(.semibold))
-            Text("Android and Translation Layer games need JIT, which on iOS only an attached debugger can grant. "
-               + "StikJIT is built into Husk and is the recommended way: it turns JIT on from inside the app, "
-               + "with no computer and no other app. StikDebug and TrollStore work too.")
+            Text("开启 JIT").font(.largeTitle.weight(.semibold))
+            Text("Android 和翻译层游戏需要 JIT；iOS 上仅连接调试器才能授予此权限。"
+               + "推荐使用 Husk 内置的 StikJIT，可以直接在应用内开启 JIT，"
+               + "无需电脑或其他应用。也支持 StikDebug 和 TrollStore。")
                 .font(.callout).foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 34)
@@ -202,7 +202,7 @@ struct OnboardingView: View {
                 Label(state, systemImage: "checkmark.circle.fill")
                     .font(.callout.weight(.medium)).foregroundStyle(.green)
             }
-            Button(jitState == nil ? "Set Up StikJIT Now" : "Change JIT Setup") { settingUpJIT = true }
+            Button(jitState == nil ? "立即配置 StikJIT" : "更改 JIT 配置") { settingUpJIT = true }
                 .font(.body.weight(.semibold))
                 .foregroundStyle(Theme.accent)
                 .padding(.top, 4)
@@ -216,10 +216,10 @@ struct OnboardingView: View {
             Image(systemName: "checkmark.seal.fill")
                 .font(.system(size: 62))
                 .foregroundStyle(Theme.accent)
-            Text("Ready").font(.largeTitle.weight(.semibold))
-            Text("If JIT is not on when Android starts, Husk turns it on with the "
-               + "method you chose, or walks you through setting one up. You can "
-               + "change it any time in Settings › JIT & sideload.")
+            Text("就绪").font(.largeTitle.weight(.semibold))
+            Text("启动 Android 时若 JIT 未开启，Husk 会使用"
+               + "你选择的方式开启，或引导完成配置。随时可以"
+               + "在设置 › JIT 与侧载中修改。")
                 .font(.callout).foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 34)

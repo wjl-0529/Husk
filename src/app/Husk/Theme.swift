@@ -46,9 +46,9 @@ enum Theme {
 
         var title: String {
             switch self {
-            case .system: return String(localized: "System")
-            case .light: return String(localized: "Light")
-            case .dark: return String(localized: "Dark")
+            case .system: return String(localized: "跟随系统")
+            case .light: return String(localized: "浅色")
+            case .dark: return String(localized: "深色")
             }
         }
 

@@ -2,7 +2,7 @@
 import SwiftUI
 import UniformTypeIdentifiers
 
-/// APKs handed to Husk from another app: the share sheet's "Husk" (or "Copy to Husk"), or "Open in Husk" from Files.
+/// APKs handed to Husk from another app: the share sheet's "Husk" (or "复制到 Husk"), or "在 Husk 中打开" from Files.
 ///
 /// Each arrives as a URL that may only be readable for a moment (a security-scoped file in another app's container, or a copy
 /// in Documents/Inbox that iOS made), so it is copied straight away to a folder of Husk's own, and then the person is asked
@@ -22,7 +22,7 @@ final class IncomingFiles: ObservableObject {
 
     /// Where copies wait. Emptied when Husk starts, so nothing left over takes up space.
     nonisolated static var folder: URL {
-        FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0].appendingPathComponent("Incoming", isDirectory: true)
+        FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0].appendingPathComponent("待处理文件", isDirectory: true)
     }
 
     nonisolated static func clearLeftovers() {
@@ -59,7 +59,7 @@ final class IncomingFiles: ObservableObject {
 
     /// Copy files to Husk's own folder, off the main thread -- a game can be gigabytes -- then hand back the copies.
     private func take(_ urls: [URL], then: @escaping @MainActor ([URL]) -> Void) {
-        preparing = urls.count == 1 ? "Preparing \(urls[0].lastPathComponent)…" : "Preparing \(urls.count) files…"
+        preparing = urls.count == 1 ? "正在准备 \(urls[0].lastPathComponent)…" : "正在准备 \(urls.count) 个文件…"
         Task.detached(priority: .userInitiated) {
             var copies: [URL] = []
             for url in urls {
@@ -124,18 +124,18 @@ struct IncomingChooser: View {
 
     private var title: String {
         guard let first = incoming.waiting.first else { return "" }
-        return incoming.waiting.count == 1 ? first.lastPathComponent : "\(incoming.waiting.count) files"
+        return incoming.waiting.count == 1 ? first.lastPathComponent : "\(incoming.waiting.count) 个文件"
     }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 18) {
             VStack(alignment: .leading, spacing: 4) {
-                Text("Add to Husk").font(.title2.weight(.bold))
+                Text("添加到 Husk").font(.title2.weight(.bold))
                 Text(LocalizedStringKey(title)).font(.subheadline).foregroundStyle(.secondary).lineLimit(2)
             }
 
-            choice(icon: "bolt.fill", title: "Translation Layer",
-                   detail: "Runs the game directly on your iPhone, without starting Android. Best for games.") {
+            choice(icon: "bolt.fill", title: "翻译层",
+                   detail: "直接在 iPhone 上运行游戏，无需启动 Android。适合游戏。") {
                 incoming.sendToTranslationLayer()
             }
             choice(icon: "apps.iphone", title: "Android",
@@ -143,7 +143,7 @@ struct IncomingChooser: View {
                 incoming.sendToAndroid()
             }
 
-            Button("Cancel", role: .cancel) { incoming.discard() }
+            Button("取消", role: .cancel) { incoming.discard() }
                 .frame(maxWidth: .infinity)
                 .padding(.top, 2)
         }
@@ -151,9 +151,9 @@ struct IncomingChooser: View {
     }
 
     private var androidDetail: String {
-        if host.isReady { return "Installs it into Android, where any app can run." }
-        if guest.state == .ready { return "Installs it into Android the next time Android starts." }
-        return "Installs it into Android once Android is downloaded and started."
+        if host.isReady { return "安装到 Android 中，可在其中运行应用。" }
+        if guest.state == .ready { return "下次启动 Android 时安装。" }
+        return "下载并启动 Android 后即可安装到 Android 中。"
     }
 
     private func choice(icon: String, title: String, detail: String, action: @escaping () -> Void) -> some View {

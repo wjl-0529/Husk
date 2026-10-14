@@ -195,7 +195,7 @@ final class TLUnityUIView: UIView, UIKeyInput {
         var p = husk_unity_perf()
         husk_unity_perf_snapshot(&p)
         let text = p.fps > 0
-            ? String(format: "%.0f fps · %.1f ms · max %.0f", p.fps, p.mean_ms, p.max_ms)
+            ? String(format: "%.0f 帧/秒 · %.1f 毫秒 · 最大 %.0f", p.fps, p.mean_ms, p.max_ms)
             : "starting"
         stats.text = text
         onStats?(text)
@@ -270,7 +270,7 @@ final class TLUnityUIView: UIView, UIKeyInput {
         // them (a Google Play install keeps a Unity game's libraries in one split and its data in an asset pack).
         for extra in extraApks.prefix(15) { husk_native_add_package(extra) }
         // Android's shared storage, one folder for every game: a game that keeps its data in a folder of its own on /sdcard finds it
-        // in Husk's "Shared Storage", which can be filled from Files or Finder.
+        // in Husk's "共享存储", which can be filled from Files or Finder.
         husk_native_set_shared_storage(TranslationLayer.sharedStorage.path)
         // The CA certificates and system fonts Android keeps under /system, as the app carries them.
         if let sys = Bundle.main.resourcePath.map({ $0 + "/android-system" }), FileManager.default.fileExists(atPath: sys) {
@@ -359,7 +359,7 @@ final class TLUnityUIView: UIView, UIKeyInput {
         typedLabel.autoresizingMask = [.flexibleWidth]
         bar.addSubview(typedLabel)
         let done = UIButton(type: .system)
-        done.setTitle("Done", for: .normal)
+        done.setTitle("完成", for: .normal)
         done.titleLabel?.font = .systemFont(ofSize: 17, weight: .semibold)
         done.frame = CGRect(x: 100, y: 0, width: 80, height: 44)
         done.autoresizingMask = [.flexibleLeftMargin]
@@ -635,19 +635,19 @@ final class TLUnityModel: ObservableObject {
 
     var statusText: String {
         switch state {
-        case Int32(HUSK_UNITY_STARTING): return "Loading the engine…"
-        case Int32(HUSK_UNITY_RUNNING):  return "Running"
-        case Int32(HUSK_UNITY_FAILED):   return "Could not start — see the log"
-        case Int32(HUSK_UNITY_ENDED):    return "The game exited"
-        default:                         return "Starting"
+        case Int32(HUSK_UNITY_STARTING): return "正在加载引擎…"
+        case Int32(HUSK_UNITY_RUNNING):  return "运行中"
+        case Int32(HUSK_UNITY_FAILED):   return "无法启动，请查看日志"
+        case Int32(HUSK_UNITY_ENDED):    return "游戏已退出"
+        default:                         return "正在启动"
         }
     }
 
     var subStatusText: String {
         switch state {
-        case Int32(HUSK_UNITY_RUNNING): return "\(frames) frame(s) drawn · native runtime"
-        case Int32(HUSK_UNITY_STARTING): return "Loading libraries and starting the engine"
-        default: return "Native runtime"
+        case Int32(HUSK_UNITY_RUNNING): return "已绘制 \(frames) 帧 · 原生运行时"
+        case Int32(HUSK_UNITY_STARTING): return "正在加载库并启动引擎"
+        default: return "原生运行时"
         }
     }
 
@@ -681,7 +681,7 @@ struct TLCocosAttemptView: View {
     @State private var padSelected: String?
     /// This game's own settings (TLAppSettings), read once as the screen opens.
     @State private var settings: TLAppSettings
-    /// Nothing over the picture. Starts as the game's "Hide the interface" setting says, and three fingers tapped together flip it.
+    /// Nothing over the picture. Starts as the game's "隐藏界面" setting says, and three fingers tapped together flip it.
     @State private var uiHidden: Bool
     /// The line saying how to get the interface back, shown for a few seconds after it goes.
     @State private var hint = false
@@ -699,7 +699,7 @@ struct TLCocosAttemptView: View {
     private var portrait: Bool { app.drawsPortrait(settings) }
 
     /// Whether an on-screen controller may be offered: not when the game's settings say never, not while a real one is connected, and
-    /// without "Always" only for Unreal, whose menus answer nothing else.
+    /// without "始终" only for Unreal, whose menus answer nothing else.
     private var padOffered: Bool {
         settings.pad != .never && pads.names.isEmpty && (settings.pad == .always || engine == .ue4 || wantsController)
     }
@@ -729,9 +729,9 @@ struct TLCocosAttemptView: View {
             Group {
                 if let other = blockedBy {
                     VStack(spacing: 8) {
-                        Text("Another game is already loaded")
+                        Text("已加载另一个游戏")
                             .font(.system(size: 16, weight: .semibold)).foregroundStyle(.white)
-                        Text("\(other) was started in this session, and a game cannot be unloaded once it has started. Close Husk completely and open it again to run \(app.label).")
+                        Text("本次会话已启动 \(other)，游戏启动后无法卸载。请完全关闭并重新打开 Husk 以运行 \(app.label)。")
                             .font(.system(size: 13)).foregroundStyle(.white.opacity(0.7))
                             .multilineTextAlignment(.center).frame(maxWidth: 460)
                     }
@@ -772,7 +772,7 @@ struct TLCocosAttemptView: View {
             if hint {
                 VStack {
                     Spacer()
-                    Text("Tap with three fingers to show the interface")
+                    Text("三指点击屏幕以显示界面")
                         .font(.system(size: 13, weight: .medium))
                         .foregroundStyle(.white)
                         .padding(.horizontal, 14).padding(.vertical, 8)
@@ -829,18 +829,18 @@ struct TLCocosAttemptView: View {
                     Image(systemName: "plus.magnifyingglass").foregroundStyle(.white.opacity(0.7))
                 }
                 HStack(spacing: 10) {
-                    Button(padLayout[id].hidden ? "Show" : "Hide") { padLayout[id].hidden.toggle(); padLayout.save(app.id) }
-                    Button("Reset") { padLayout[id] = PadLayout.Adjust(); padLayout.save(app.id) }
+                    Button(padLayout[id].hidden ? "显示" : "隐藏") { padLayout[id].hidden.toggle(); padLayout.save(app.id) }
+                    Button("重置") { padLayout[id] = PadLayout.Adjust(); padLayout.save(app.id) }
                 }
                 .buttonStyle(.bordered).tint(.white)
             } else {
-                Text("Drag a control to move it, or tap one to resize or hide it.")
+                Text("拖动控件可移动位置；点击可调整大小或隐藏。")
                     .font(.system(size: 13, weight: .medium)).foregroundStyle(.white)
                     .multilineTextAlignment(.center).frame(maxWidth: 260)
             }
             HStack(spacing: 10) {
-                Button("Reset All", role: .destructive) { padLayout = PadLayout(); padSelected = nil; padLayout.save(app.id) }
-                Button("Done") { editingPad = false; padSelected = nil }.buttonStyle(.borderedProminent)
+                Button("全部重置", role: .destructive) { padLayout = PadLayout(); padSelected = nil; padLayout.save(app.id) }
+                Button("完成") { editingPad = false; padSelected = nil }.buttonStyle(.borderedProminent)
             }
             .buttonStyle(.bordered)
         }
@@ -852,12 +852,12 @@ struct TLCocosAttemptView: View {
     private var bar: some View {
         HStack(spacing: 12) {
             Button { dismiss() } label: {
-                Label("Close", systemImage: "xmark").font(.system(size: 13, weight: .semibold))
+                Label("关闭", systemImage: "xmark").font(.system(size: 13, weight: .semibold))
             }
             .tint(.white)
             if engine == .flutter {
                 Button { husk_flutter_back() } label: {
-                    Label("Back", systemImage: "chevron.backward").font(.system(size: 13, weight: .semibold))
+                    Label("返回", systemImage: "chevron.backward").font(.system(size: 13, weight: .semibold))
                 }
                 .tint(.white)
             }
@@ -866,17 +866,17 @@ struct TLCocosAttemptView: View {
                 .font(.system(size: 12, weight: .medium)).foregroundStyle(.white.opacity(0.85)).lineLimit(1)
             Spacer()
             if !pads.names.isEmpty {
-                Label(pads.names.count == 1 ? pads.names[0] : "\(pads.names.count) controllers", systemImage: "gamecontroller.fill")
+                Label(pads.names.count == 1 ? pads.names[0] : "\(pads.names.count) 个手柄", systemImage: "gamecontroller.fill")
                     .font(.system(size: 11, weight: .medium)).foregroundStyle(.white.opacity(0.7)).lineLimit(1)
             }
             if padOffered {
                 Button { settings.padShown.toggle(); settings.save(app.id); if !settings.padShown { editingPad = false } } label: {
-                    Label(settings.padShown ? "Hide pad" : "Pad", systemImage: "gamecontroller").font(.system(size: 12, weight: .semibold))
+                    Label(settings.padShown ? "隐藏虚拟手柄" : "虚拟手柄", systemImage: "gamecontroller").font(.system(size: 12, weight: .semibold))
                 }
                 .tint(.white)
                 if settings.padShown {
                     Button { padSelected = nil; editingPad.toggle() } label: {
-                        Label(editingPad ? "Done" : "Edit pad", systemImage: "slider.horizontal.below.square.and.square.filled")
+                        Label(editingPad ? "完成" : "编辑虚拟手柄", systemImage: "slider.horizontal.below.square.and.square.filled")
                             .font(.system(size: 12, weight: .semibold))
                     }
                     .tint(editingPad ? .yellow : .white)
@@ -887,12 +887,12 @@ struct TLCocosAttemptView: View {
             }
             if devInfo {
                 Button { withAnimation(.snappy(duration: 0.25)) { showLog.toggle() } } label: {
-                    Text(showLog ? "Hide log" : "Log").font(.system(size: 12, weight: .semibold))
+                    Text(showLog ? "隐藏日志" : "日志").font(.system(size: 12, weight: .semibold))
                 }
                 .tint(.white)
             }
             Button { toggleInterface() } label: {
-                Label("Hide", systemImage: "eye.slash").font(.system(size: 12, weight: .semibold))
+                Label("隐藏", systemImage: "eye.slash").font(.system(size: 12, weight: .semibold))
             }
             .tint(.white)
         }
@@ -904,16 +904,16 @@ struct TLCocosAttemptView: View {
     private var logPanel: some View {
         VStack(spacing: 0) {
             HStack {
-                Text("ATTEMPT LOG").font(.technical(10, weight: .bold)).foregroundStyle(Theme.textDim)
+                Text("尝试运行日志").font(.technical(10, weight: .bold)).foregroundStyle(Theme.textDim)
                 Spacer()
                 Button { UIPasteboard.general.string = model.logText } label: {
-                    Label("Copy", systemImage: "doc.on.doc").font(.system(size: 11))
+                    Label("复制", systemImage: "doc.on.doc").font(.system(size: 11))
                 }
             }
             .padding(.horizontal, 10).padding(.vertical, 6)
             ScrollViewReader { proxy in
                 ScrollView {
-                    Text(model.logText.isEmpty ? "Starting…" : model.logText)
+                    Text(model.logText.isEmpty ? "正在启动…" : model.logText)
                         .font(.technical(10))
                         .foregroundStyle(Theme.text)
                         .frame(maxWidth: .infinity, alignment: .leading)

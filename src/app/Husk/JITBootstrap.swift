@@ -106,11 +106,11 @@ enum JITBootstrap {
             HuskLog.log("jit", "no trap servicer, but MAP_JIT executes here -- "
                              + "QEMU will map its own buffer")
         } else {
-            lastFailure = "The debugger is attached but is not answering trap "
-                        + "requests, and this device will not execute a MAP_JIT "
-                        + "mapping either, so no executable memory could be "
-                        + "claimed. This is what happens when Husk runs inside "
-                        + "another container app rather than sideloaded on its own."
+            lastFailure = "调试器已连接，但没有处理陷阱"
+                        + "请求；此设备也无法执行 MAP_JIT"
+                        + "映射，因此无法获取可执行"
+                        + "内存。这通常发生在 Husk 运行于"
+                        + "其他容器应用内，而不是独立侧载安装时。"
         }
         HuskLog.log("jit", ok ? "JIT region secured; it will be handed to QEMU later"
                               : "JIT prewarm FAILED -- StikDebug is not servicing traps")

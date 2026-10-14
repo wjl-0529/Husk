@@ -64,45 +64,45 @@ struct JITSetupFlow: View {
     // MARK: Choose
 
     private var choose: some View {
-        page(symbol: "bolt.fill", title: "Turn on JIT",
-             subtitle: "Android needs memory it can write and then run, which on iOS only an attached "
-                     + "debugger can grant. Choose how your \(device) gets one.") {
+        page(symbol: "bolt.fill", title: "开启 JIT",
+             subtitle: "Android 需要可写且可执行的内存，iOS 上仅连接"
+                     + "调试器才能获得。请选择 \(device) 的开启方式。") {
             VStack(spacing: 10) {
                 let builtIn = HuskBuiltInJIT.unavailableReason
-                way("Pair on this \(device)", symbol: "iphone.radiowaves.left.and.right",
-                    detail: builtIn ?? (!OnDevicePairing.isSupported ? "Needs iOS 27 or later."
-                        : jit.pairingSource == .onDevice ? "Paired on this \(device)."
-                        : "No computer needed. Pairs from Settings in a minute."),
+                way("在此 \(device) 上配对", symbol: "iphone.radiowaves.left.and.right",
+                    detail: builtIn ?? (!OnDevicePairing.isSupported ? "需要 iOS 27 或更高版本。"
+                        : jit.pairingSource == .onDevice ? "已在此 \(device) 上配对。"
+                        : "无需电脑，在设置中即可快速完成配对。"),
                     done: jit.pairingSource == .onDevice,
                     enabled: builtIn == nil && OnDevicePairing.isSupported) { path.append(.pairOnDevice) }
-                way("Use a pairing file", symbol: "doc.badge.plus",
-                    detail: builtIn ?? (jit.pairingSource == .imported ? "Pairing file imported."
-                        : "Import a pairing file made on a computer."),
+                way("使用配对文件", symbol: "doc.badge.plus",
+                    detail: builtIn ?? (jit.pairingSource == .imported ? "配对文件已导入。"
+                        : "导入在电脑上生成的配对文件。"),
                     done: jit.pairingSource == .imported,
                     enabled: builtIn == nil) { path.append(.importFile) }
-                way("Use StikDebug", symbol: "ant",
-                    detail: JITBootstrap.isStikDebugInstalled ? "StikDebug is installed."
-                        : "Enable JIT through the StikDebug app.",
+                way("使用 StikDebug", symbol: "ant",
+                    detail: JITBootstrap.isStikDebugInstalled ? "已安装 StikDebug。"
+                        : "通过 StikDebug 应用开启 JIT。",
                     done: jit.method == .stikDebug) { path.append(.stikDebug) }
-                way("Use TrollStore", symbol: "sparkles",
-                    detail: JITBootstrap.isTrollStoreInstalled ? "TrollStore is installed."
-                        : "For a Husk installed through TrollStore.",
+                way("使用 TrollStore", symbol: "sparkles",
+                    detail: JITBootstrap.isTrollStoreInstalled ? "已安装 TrollStore。"
+                        : "适用于通过 TrollStore 安装的 Husk。",
                     done: jit.method == .trollStore) { path.append(.trollStore) }
-                way("Use a jailbreak", symbol: "lock.open",
-                    detail: JITBootstrap.debuggedAtLaunch ? "JIT was already on when Husk opened."
-                        : JITBootstrap.isJailbroken ? "A jailbreak was found. Turn on Allow JIT in Apps."
-                        : "Dopamine can give every app JIT with one setting.",
+                way("使用越狱", symbol: "lock.open",
+                    detail: JITBootstrap.debuggedAtLaunch ? "Husk 启动时 JIT 已开启。"
+                        : JITBootstrap.isJailbroken ? "已检测到越狱，请开启“允许应用使用 JIT”。"
+                        : "Dopamine 可通过一项设置为所有应用开启 JIT。",
                     done: jit.method == .jailbreak || JITBootstrap.debuggedAtLaunch) { path.append(.jailbreak) }
             }
             if jit.hasPairing && HuskBuiltInJIT.isAvailable {
                 Button { path.append(.connect) } label: {
-                    Label("Continue with the current pairing", systemImage: "arrow.right")
+                    Label("继续使用当前配对", systemImage: "arrow.right")
                         .font(.system(size: 14, weight: .semibold))
                 }
                 .padding(.top, 4)
             }
         } actions: {
-            Button("Not now") { close() }
+            Button("暂不") { close() }
                 .font(.system(size: 15, weight: .medium))
                 .foregroundStyle(Theme.textDim)
         }
@@ -145,19 +145,19 @@ struct JITSetupFlow: View {
     }
 
     private var pairOnDevice: some View {
-        page(symbol: "iphone.radiowaves.left.and.right", title: "Pair on this \(device)",
-             subtitle: "Husk pretends to be a computer on your Wi-Fi, and your \(device) pairs with it "
-                     + "the way it would with a Mac.") {
+        page(symbol: "iphone.radiowaves.left.and.right", title: "在此 \(device) 上配对",
+             subtitle: "Husk 会模拟 Wi-Fi 中的一台电脑，让 \(device) 与它配对，"
+                     + "方式与连接 Mac 相同。") {
             VStack(alignment: .leading, spacing: 14) {
-                point(1, "Turn on Wi-Fi, tap **Start pairing** below and allow Local Network access.",
+                point(1, "开启 Wi-Fi，点击下方的 **开始配对**，并允许本地网络访问。",
                       done: pairing.phase != .idle)
-                point(2, "Open **Settings › Privacy & Security › Developer Mode**, scroll down and tap "
-                       + "**Pair with \(OnDevicePairing.hostName)**.",
+                point(2, "打开 **设置 › 隐私与安全性 › 开发者模式**，向下滚动并点击"
+                       + "**与 \(OnDevicePairing.hostName) 配对**。",
                       done: pairing.isShowingPin || pairedOnDevice)
-                point(3, "Enter the code Husk shows. It also appears in a banner and a notification, "
-                       + "so you don't have to switch back.",
+                point(3, "输入 Husk 显示的代码。代码也会显示在横幅和通知中，"
+                       + "无需切回 Husk 查看。",
                       done: pairedOnDevice)
-                point(4, "Come back to Husk.", done: pairedOnDevice)
+                point(4, "返回 Husk。", done: pairedOnDevice)
             }
             .padding(16).huskCard()
             pairingStatus
@@ -165,15 +165,15 @@ struct JITSetupFlow: View {
             switch pairing.phase {
             case .idle, .failed:
                 Button { pairing.start() } label: {
-                    Label("Start pairing", systemImage: "dot.radiowaves.left.and.right")
+                    Label("开始配对", systemImage: "dot.radiowaves.left.and.right")
                 }
                 .buttonStyle(PrimaryButtonStyle())
             case .waiting, .pin:
-                Button("Cancel pairing", role: .cancel) { pairing.cancel() }
+                Button("取消配对", role: .cancel) { pairing.cancel() }
                     .font(.system(size: 15, weight: .medium))
                     .foregroundStyle(Theme.textDim)
             case .paired:
-                Button("Continue") { path.append(.connect) }
+                Button("继续") { path.append(.connect) }
                     .buttonStyle(PrimaryButtonStyle())
             }
         }
@@ -187,16 +187,16 @@ struct JITSetupFlow: View {
             VStack(alignment: .leading, spacing: 8) {
                 HStack(spacing: 10) {
                     ProgressView().tint(Theme.accent)
-                    Text("Waiting for your \(device)…").font(.system(size: 15, weight: .semibold))
+                    Text("正在等待 \(device)…").font(.system(size: 15, weight: .semibold))
                         .foregroundStyle(Theme.text)
                 }
-                Button("Open Settings") {
+                Button("打开设置") {
                     if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
                 }
                 .font(.system(size: 14, weight: .semibold))
                 if pairing.backgroundLimited {
-                    Text("This installation can only wait about 30 seconds in the background, "
-                       + "so go to Settings straight away.")
+                    Text("此安装方式只能在后台等待约 30 秒，"
+                       + "请立即前往设置。")
                         .font(.system(size: 13)).foregroundStyle(.orange)
                         .fixedSize(horizontal: false, vertical: true)
                 }
@@ -205,17 +205,17 @@ struct JITSetupFlow: View {
             .padding(16).huskCard()
         case .pin(let pin):
             VStack(spacing: 8) {
-                Text("Enter this code on your \(device)").font(.system(size: 14))
+                Text("在 \(device) 上输入此代码").font(.system(size: 14))
                     .foregroundStyle(Theme.textDim)
                 Text(pin).font(.system(size: 40, weight: .bold, design: .monospaced)).tracking(6)
                     .foregroundStyle(Theme.text)
                     .textSelection(.enabled)
-                    .accessibilityLabel("Pairing code \(pin.map(String.init).joined(separator: " "))")
+                    .accessibilityLabel("配对代码 \(pin.map(String.init).joined(separator: " "))")
             }
             .frame(maxWidth: .infinity)
             .padding(18).huskCard(high: true)
         case .paired(let name):
-            outcome("Paired with \(name)", ok: true)
+            outcome("已与 \(name) 配对", ok: true)
         case .failed(let message):
             outcome(message, ok: false)
         }
@@ -224,28 +224,28 @@ struct JITSetupFlow: View {
     // MARK: Import a pairing file
 
     private var importFile: some View {
-        page(symbol: "doc.badge.plus", title: "Use a pairing file",
-             subtitle: "A pairing file made on a computer lets Husk talk to this \(device) the same way.") {
+        page(symbol: "doc.badge.plus", title: "使用配对文件",
+             subtitle: "在电脑上生成的配对文件也能让 Husk 连接此 \(device)。") {
             VStack(alignment: .leading, spacing: 14) {
-                point(1, "On a computer, make this \(device)'s pairing file with the "
+                point(1, "在电脑上，按照配对文件指引为 \(device) 生成文件："
                        + "[StikDebug pairing-file guide](https://github.com/StikDebug/StikDebug-Guide/blob/main/pairing_file.md).",
                       done: jit.pairingSource == .imported)
-                point(2, "Save it to Files, or AirDrop it to this \(device).",
+                point(2, "保存到“文件”，或通过隔空投送发送到此 \(device)。",
                       done: jit.pairingSource == .imported)
-                point(3, "Tap **Choose pairing file** and pick it.", done: jit.pairingSource == .imported)
+                point(3, "点击 **选择配对文件** 并选取文件。", done: jit.pairingSource == .imported)
             }
             .padding(16).huskCard()
-            Label("The pairing file stays in Husk's Documents folder and is only sent to Husk's own helper.",
+            Label("配对文件保存在 Husk 的“文稿”文件夹中，仅发送给 Husk 自身的辅助扩展。",
                   systemImage: "lock.fill")
                 .font(.system(size: 13)).foregroundStyle(Theme.textDim)
             if let error = jit.error { outcome(error, ok: false) }
         } actions: {
             if jit.pairingSource == .imported {
-                Button("Continue") { path.append(.connect) }.buttonStyle(PrimaryButtonStyle())
-                Button("Choose another file") { importing = true }
+                Button("继续") { path.append(.connect) }.buttonStyle(PrimaryButtonStyle())
+                Button("选择其他文件") { importing = true }
                     .font(.system(size: 15, weight: .medium))
             } else {
-                Button { importing = true } label: { Label("Choose pairing file", systemImage: "folder") }
+                Button { importing = true } label: { Label("选择配对文件", systemImage: "folder") }
                     .buttonStyle(PrimaryButtonStyle())
             }
         }
@@ -254,20 +254,20 @@ struct JITSetupFlow: View {
     // MARK: LocalDevVPN
 
     private var connect: some View {
-        page(symbol: "network.badge.shield.half.filled", title: "Connect LocalDevVPN",
-             subtitle: "Husk's helper reaches this \(device)'s debugging service through a local VPN. "
-                     + "Nothing leaves your \(device).") {
+        page(symbol: "network.badge.shield.half.filled", title: "连接 LocalDevVPN",
+             subtitle: "Husk 的辅助扩展通过本地 VPN 连接 \(device) 的调试服务。"
+                     + "数据不会离开 \(device)。") {
             VStack(alignment: .leading, spacing: 14) {
-                point(1, "Install [LocalDevVPN](\(LocalDevVPN.appStore.absoluteString)) from the App Store.",
+                point(1, "从 App Store 安装 [LocalDevVPN](\(LocalDevVPN.appStore.absoluteString))。",
                       done: LocalDevVPN.isInstalled)
-                point(2, "Tap **Connect LocalDevVPN**. It switches the VPN on and comes straight back to Husk.")
-                point(3, "Leave it connected whenever you turn JIT on.")
+                point(2, "点击 **连接 LocalDevVPN**，开启 VPN 后会立即返回 Husk。")
+                point(3, "开启 JIT 时请始终保持连接。")
             }
             .padding(16).huskCard()
         } actions: {
             Button(LocalDevVPN.actionTitle) { LocalDevVPN.open() }
                 .buttonStyle(PrimaryButtonStyle())
-            Button("It's connected") { path.append(.enable) }
+            Button("已连接") { path.append(.enable) }
                 .font(.system(size: 15, weight: .medium))
         }
     }
@@ -277,30 +277,30 @@ struct JITSetupFlow: View {
     private var attached: Bool { jit.attachGeneration > 0 || JITBootstrap.debuggedFlag }
 
     private var enable: some View {
-        page(symbol: "bolt.badge.checkmark", title: "Turn on JIT",
-             subtitle: "The first check downloads and mounts Apple's Developer Disk Image, "
-                     + "which can take a minute.") {
+        page(symbol: "bolt.badge.checkmark", title: "开启 JIT",
+             subtitle: "首次检查会下载并挂载 Apple 的开发者磁盘映像，"
+                     + "可能需要一分钟。") {
             VStack(alignment: .leading, spacing: 14) {
-                point(1, "Tap **Check setup**. Husk checks LocalDevVPN and prepares the Developer Disk Image.",
+                point(1, "点击 **检查配置**，Husk 会检查 LocalDevVPN 并准备开发者磁盘映像。",
                       done: jit.prepared || attached)
-                point(2, "Tap **Enable JIT**. Husk's helper attaches and Android can start.", done: attached)
+                point(2, "点击 **开启 JIT**，辅助扩展连接后即可启动 Android。", done: attached)
             }
             .padding(16).huskCard()
 
             if jit.busy {
                 HStack(spacing: 11) {
                     ProgressView().tint(Theme.accent)
-                    Text(jit.status ?? "Working…").font(.system(size: 14)).foregroundStyle(Theme.text)
+                    Text(jit.status ?? "正在处理…").font(.system(size: 14)).foregroundStyle(Theme.text)
                     Spacer(minLength: 0)
                 }
                 .padding(16).huskCard(high: true)
             } else if attached {
-                outcome("JIT is on. Android can start.", ok: true)
+                outcome("JIT 已开启，可以启动 Android。", ok: true)
             } else if let error = jit.error {
                 VStack(alignment: .leading, spacing: 10) {
                     outcome(error, ok: false)
                     if jit.connectionProblem == .pairing {
-                        Button(OnDevicePairing.isSupported ? "Pair again" : "Import a new pairing file") {
+                        Button(OnDevicePairing.isSupported ? "重新配对" : "导入新的配对文件") {
                             path = [OnDevicePairing.isSupported ? .pairOnDevice : .importFile]
                         }
                         .font(.system(size: 14, weight: .semibold))
@@ -315,20 +315,20 @@ struct JITSetupFlow: View {
             }
 
             if !attached {
-                Button("Reset Developer Disk Image", role: .destructive) { jit.resetDDI() }
+                Button("重置开发者磁盘映像", role: .destructive) { jit.resetDDI() }
                     .font(.system(size: 13, weight: .medium))
                     .disabled(jit.busy)
                     .padding(.top, 4)
             }
         } actions: {
             if attached {
-                Button("Done") { close() }.buttonStyle(PrimaryButtonStyle())
+                Button("完成") { close() }.buttonStyle(PrimaryButtonStyle())
             } else if jit.prepared {
-                Button { jit.enableBuiltIn() } label: { Label("Enable JIT", systemImage: "bolt.fill") }
+                Button { jit.enableBuiltIn() } label: { Label("开启 JIT", systemImage: "bolt.fill") }
                     .buttonStyle(PrimaryButtonStyle(enabled: !jit.busy))
                     .disabled(jit.busy)
             } else {
-                Button("Check setup") { jit.prepareBuiltIn() }
+                Button("检查配置") { jit.prepareBuiltIn() }
                     .buttonStyle(PrimaryButtonStyle(enabled: !jit.busy))
                     .disabled(jit.busy)
             }
@@ -338,19 +338,19 @@ struct JITSetupFlow: View {
     // MARK: StikDebug
 
     private var stikDebug: some View {
-        page(symbol: "ant", title: "Use StikDebug",
-             subtitle: "StikDebug is a separate app that attaches to Husk. Husk sends it the JIT script "
-                     + "itself, so nothing needs configuring for Husk inside StikDebug.") {
+        page(symbol: "ant", title: "使用 StikDebug",
+             subtitle: "StikDebug 是用于连接 Husk 的独立应用。Husk 会自动发送 JIT 脚本，"
+                     + "无需在 StikDebug 内单独配置。") {
             VStack(alignment: .leading, spacing: 14) {
                 point(1, "Install [StikDebug](https://github.com/StikDebug/StikDebug/releases/latest).",
                       done: JITBootstrap.isStikDebugInstalled)
-                point(2, "Import this \(device)'s pairing file into StikDebug.")
-                point(3, "Install and connect [LocalDevVPN](\(LocalDevVPN.appStore.absoluteString)).")
-                point(4, "Whenever Android starts, Husk opens StikDebug, which attaches and comes back.")
+                point(2, "将 \(device) 的配对文件导入 StikDebug。")
+                point(3, "安装并连接 [LocalDevVPN](\(LocalDevVPN.appStore.absoluteString))。")
+                point(4, "启动 Android 时，Husk 会打开 StikDebug；连接完成后自动返回。")
             }
             .padding(16).huskCard()
         } actions: {
-            Button("Use StikDebug") {
+            Button("使用 StikDebug") {
                 jit.method = .stikDebug
                 HuskLog.log("ui", "JIT method set to StikDebug")
                 close()
@@ -362,27 +362,27 @@ struct JITSetupFlow: View {
     // MARK: TrollStore
 
     private var trollStore: some View {
-        page(symbol: "sparkles", title: "Use TrollStore",
-             subtitle: "TrollStore can enable JIT for apps it installed, with no pairing file, "
-                     + "VPN or computer.") {
+        page(symbol: "sparkles", title: "使用 TrollStore",
+             subtitle: "TrollStore 可为其安装的应用开启 JIT，无需配对文件、"
+                     + "VPN 或电脑。") {
             VStack(alignment: .leading, spacing: 14) {
-                point(1, "Install Husk.ipa through TrollStore, on an iOS version TrollStore supports. It carries the "
-                       + "entitlements TrollStore keeps, so the same file works there and in a sideloader.",
+                point(1, "在支持 TrollStore 的 iOS 版本上，通过 TrollStore 安装 Husk.ipa。安装包携带"
+                       + "TrollStore 保留的权限，因此同一文件也可用于其他侧载工具。",
                       done: JITBootstrap.isInstalledWithTrollStore)
-                point(2, "In TrollStore's Settings, turn on URL Scheme. TrollStore ignores enable-jit requests without it.",
+                point(2, "在 TrollStore 设置中开启 URL Scheme，否则 TrollStore 会忽略开启 JIT 的请求。",
                       done: JITBootstrap.isTrollStoreInstalled)
-                point(3, "Whenever Android or a game starts, Husk asks TrollStore to enable JIT. TrollStore opens Husk, "
-                       + "attaches to it for a moment and lets go, which leaves it allowed to run code it wrote.")
+                point(3, "启动 Android 或游戏时，Husk 会请求 TrollStore 开启 JIT。TrollStore 会打开 Husk，"
+                       + "临时连接调试器再断开，以允许执行运行时生成的代码。")
             }
             .padding(16).huskCard()
             if !JITBootstrap.isTrollStoreInstalled {
-                Label("TrollStore was not found on this \(device). Husk can only use it once it is installed "
-                    + "and Husk was installed through it.", systemImage: "info.circle")
+                Label("此 \(device) 上未找到 TrollStore。必须先安装 TrollStore，"
+                    + "并且 Husk 是通过它安装的。", systemImage: "info.circle")
                     .font(.system(size: 13)).foregroundStyle(Theme.textDim)
                     .fixedSize(horizontal: false, vertical: true)
             }
         } actions: {
-            Button("Use TrollStore") {
+            Button("使用 TrollStore") {
                 jit.method = .trollStore
                 HuskLog.log("ui", "JIT method set to TrollStore")
                 close()
@@ -394,25 +394,25 @@ struct JITSetupFlow: View {
     // MARK: Jailbreak
 
     private var jailbreak: some View {
-        page(symbol: "lock.open", title: "Use a jailbreak",
-             subtitle: "On a device jailbroken with Dopamine, JIT is a setting: the jailbreak marks every app as "
-                     + "debugged when it opens, and a debugged app may run code it wrote. Husk needs nothing else.") {
+        page(symbol: "lock.open", title: "使用越狱",
+             subtitle: "Dopamine 越狱设备可在设置中开启 JIT。越狱会在应用启动时将其"
+                     + "标记为已调试，使其能够执行自己生成的代码。Husk 无需其他配置。") {
             VStack(alignment: .leading, spacing: 14) {
-                point(1, "Open Dopamine and go to its Settings.", done: JITBootstrap.isJailbroken)
-                point(2, "Turn on Allow JIT in Apps.")
-                point(3, "Close Husk completely and open it again. The setting applies to apps as they start.",
+                point(1, "打开 Dopamine 并进入设置。", done: JITBootstrap.isJailbroken)
+                point(2, "开启“允许应用使用 JIT”。")
+                point(3, "请完全关闭并重新打开 Husk，此设置在应用启动时生效。",
                       done: JITBootstrap.debuggedAtLaunch)
             }
             .padding(16).huskCard()
             if JITBootstrap.debuggedAtLaunch {
-                Label("Husk was marked as debugged when it opened, so JIT is on.", systemImage: "checkmark.circle.fill")
+                Label("Husk 启动时已被标记为已调试，JIT 已开启。", systemImage: "checkmark.circle.fill")
                     .font(.system(size: 13)).foregroundStyle(.green)
             } else if !JITBootstrap.isJailbroken {
-                Label("No jailbreak was found on this \(device).", systemImage: "info.circle")
+                Label("此 \(device) 上未检测到越狱。", systemImage: "info.circle")
                     .font(.system(size: 13)).foregroundStyle(Theme.textDim)
             }
         } actions: {
-            Button("Use the jailbreak") {
+            Button("使用越狱方式") {
                 jit.method = .jailbreak
                 HuskLog.log("ui", "JIT method set to jailbreak")
                 close()
@@ -452,7 +452,7 @@ struct JITSetupFlow: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
-                Button("Close") { close() }
+                Button("关闭") { close() }
             }
         }
     }

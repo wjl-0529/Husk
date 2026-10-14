@@ -29,18 +29,18 @@ struct BootScreen: View {
     /// looking at the screen, and the jokes should not repeat before the
     /// information does.
     private static let phrases = [
-        "Prepare for awesomeness",
-        "Waking Android up",
-        "Teaching an iPhone to speak Android",
-        "This is a whole operating system — be patient",
-        "App by Levi",
-        "Star the repo if you like this sort of thing",
-        "Translating arm64, one block at a time",
-        "No, it has not frozen",
-        "Unpacking the guest",
-        "Almost worth the wait",
-        "Negotiating with the JIT",
-        "Nearly there",
+        "准备开始精彩体验",
+        "正在唤醒 Android",
+        "让 iPhone 学会运行 Android",
+        "这是完整的操作系统，请耐心等待",
+        "由 Levi 开发",
+        "喜欢这个项目的话，欢迎为仓库点星",
+        "正在逐块翻译 arm64 代码",
+        "没有卡住，请耐心等待",
+        "正在解压虚拟机",
+        "等待即将结束",
+        "正在与 JIT 协商",
+        "即将完成",
     ]
 
     var body: some View {
@@ -93,7 +93,7 @@ struct BootScreen: View {
                 // An escape hatch, but not an invitation: it turns up only once
                 // waiting has stopped being novel.
                 if now.timeIntervalSince(began) > 8 {
-                    Button("Use Husk while it starts", action: onSkip)
+                    Button("启动期间继续使用 Husk", action: onSkip)
                         .font(.system(size: 13, weight: .medium))
                         .foregroundStyle(Theme.textDim)
                         .padding(.top, 14)
@@ -160,12 +160,12 @@ struct BootScreen: View {
     private var remaining: String? {
         let done = Double(runner.bootProgress)
         // Past zygote the remaining time is mostly app compilation, and the early
-        // pace says nothing about it. The estimate kept promising "about a minute"
+        // pace says nothing about it. The estimate kept promising "约一分钟"
         // for ten minutes, so show elapsed time instead.
         if done >= 58, !QemuRunner.didRestore {
             let mins = Int(now.timeIntervalSince(QemuRunner.bootStarted) / 60)
-            return mins < 1 ? "first boot takes 5–15 min"
-                            : "\(mins) min · first boot takes 5–15 min"
+            return mins < 1 ? "首次启动需要 5–15 分钟"
+                            : "\(mins) 分钟 · 首次启动需要 5–15 分钟"
         }
         guard done >= 8, done <= 92 else { return nil }
         let elapsed = now.timeIntervalSince(began)
@@ -175,8 +175,8 @@ struct BootScreen: View {
         guard left > 2, left < 15 * 60 else { return nil }
         if left < 90 {
             let rounded = Int((left / 5).rounded()) * 5
-            return "about \(max(rounded, 5)) seconds remaining"
+            return "大约还需 \(max(rounded, 5)) 秒"
         }
-        return "about \(Int((left / 60).rounded())) minutes remaining"
+        return "大约还需 \(Int((left / 60).rounded())) 分钟"
     }
 }

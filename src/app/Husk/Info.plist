@@ -9,7 +9,7 @@
 		<string>$(PRODUCT_BUNDLE_IDENTIFIER).*</string>
 	</array>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<string>zh-Hans</string>
 	<key>CFBundleDisplayName</key>
 	<string>Husk</string>
 	<key>CFBundleDocumentTypes</key>
