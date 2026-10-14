@@ -33,12 +33,19 @@ jobs:
           targets: aarch64-apple-ios
       - name: Restore script permissions
         run: chmod +x scripts/*.sh
+      - name: Restore official Android and Java resources
+        run: |
+          mkdir -p build
+          curl -fL --retry 3 https://github.com/Leviidev/Husk/releases/download/2.0/Husk.ipa -o build/official-2.0.ipa
+          python3 scripts/restore_official_resources.py
       - name: Build and package
         run: ./scripts/ci_build.sh "$GITHUB_WORKSPACE/build/Husk-zh-Hans.ipa"
       - name: Verify Chinese resources
         run: |
           unzip -p build/Husk-zh-Hans.ipa Payload/Husk.app/zh-Hans.lproj/Localizable.strings > /tmp/husk-chinese.strings
           test -s /tmp/husk-chinese.strings
+      - name: Verify official resource completeness
+        run: python3 scripts/verify_official_resources.py
       - name: Upload IPA and TIPA
         uses: actions/upload-artifact@v4
         with:
