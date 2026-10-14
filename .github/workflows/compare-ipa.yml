@@ -1,0 +1,33 @@
+name: Compare official IPA
+on:
+  push:
+    paths: ['.github/workflows/compare-ipa.yml']
+permissions:
+  actions: read
+  contents: read
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: Husk-zh-Hans
+          run-id: 38513189586
+          github-token: ${{ github.token }}
+      - run: curl -fL --retry 3 https://github.com/Leviidev/Husk/releases/download/2.0/Husk.ipa -o official.ipa
+      - name: Compare files
+        run: |
+          python3 - <<'PY'
+          import zipfile,json,hashlib,collections
+          from pathlib import Path
+          a=zipfile.ZipFile('official.ipa'); b=zipfile.ZipFile('Husk-zh-Hans.ipa')
+          def files(z): return {i.filename.split('.app/',1)[-1]:i for i in z.infolist() if '.app/' in i.filename and not i.is_dir()}
+          x,y=files(a),files(b)
+          report={'official_sha256':hashlib.sha256(Path('official.ipa').read_bytes()).hexdigest(),'official_size':Path('official.ipa').stat().st_size,'chinese_size':Path('Husk-zh-Hans.ipa').stat().st_size,'official_uncompressed':sum(i.file_size for i in x.values()),'chinese_uncompressed':sum(i.file_size for i in y.values()),'missing':[{'path':p,'size':x[p].file_size,'compressed':x[p].compress_size} for p in sorted(x.keys()-y.keys())],'added':sorted(y.keys()-x.keys()),'changed':[{'path':p,'official':x[p].file_size,'chinese':y[p].file_size,'official_zip':x[p].compress_size,'chinese_zip':y[p].compress_size} for p in sorted(x.keys()&y.keys()) if x[p].CRC!=y[p].CRC]}
+          Path('comparison.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
+          print(json.dumps(report,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ipa-comparison
+          path: comparison.json
