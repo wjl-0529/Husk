@@ -19,4 +19,4 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create zh-hans-20261014-full Husk-zh-Hans.ipa Husk-zh-Hans.tipa --repo "$GITHUB_REPOSITORY" --target cf778b740123125866e918db0e654e0c362d143e --title "Husk 简体中文版" --notes "简体中文 IPA 与 TrollStore TIPA。"
+          gh release create zh-hans-20261014-full Husk-zh-Hans.ipa Husk-zh-Hans.tipa --repo "$GITHUB_REPOSITORY" --target main --title "Husk 简体中文版" --notes "简体中文 IPA 与 TrollStore TIPA。"
